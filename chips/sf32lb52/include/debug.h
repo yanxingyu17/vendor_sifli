@@ -1,5 +1,5 @@
 /****************************************************************************
- * vendor/sifli/boards/sf32lb52/sf32lb52_devkit_lcd/sf32lb52_devkit_lcd.h
+ * vendor/sifli/chips/sf32lb52/include/debug.h
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,31 +18,39 @@
  *
  ****************************************************************************/
 
-#ifndef __VENDOR_SIFLI_BOARDS_SF32LB52_SF32LB52_DEVKIT_LCD_SF32LB52_DEVKIT_LCD_H
-#define __VENDOR_SIFLI_BOARDS_SF32LB52_SF32LB52_DEVKIT_LCD_SF32LB52_DEVKIT_LCD_H
+#ifndef __VENDOR_SIFLI_SF32LB52_INCLUDE_DEBUG_H
+#define __VENDOR_SIFLI_SF32LB52_INCLUDE_DEBUG_H
+
+/****************************************************************************
+ * Public Function Prototypes
+ ****************************************************************************/
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+int sifli_arch_syslog(int priority, const char *fmt, ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
 
-/* Number of GPIO pins */
-#define BOARD_NGPIOIN     1
-#define BOARD_NGPIOOUT    1
-#define BOARD_NGPIOINT    1
+/* Route debug output through SiFli low-level logger. */
 
-#define GPIO_IN1          (GET_PIN_2(hwp_gpio1, 34))
-#define GPIO_OUT1         (GET_PIN_2(hwp_gpio1, 26))
+#define __arch_syslog sifli_arch_syslog
 
-#define GPIO_INT1         (GET_PIN_2(hwp_gpio1, 34))
+/* This header is reachable as <debug.h> because of chip include path
+ * priority. Forward to NuttX's real debug.h in that case so subsystem
+ * macros (sinfo/serr/tmrerr/...) are still defined.
+ */
 
-
-
-int sf32lb52_devkit_lcd_bringup(void);
-
-
-#ifdef CONFIG_DEV_GPIO
-int sifli_gpio_initialize(void);
+#ifndef __INCLUDE_DEBUG_H
+#  include_next <debug.h>
 #endif
 
-#endif /* __VENDOR_SIFLI_BOARDS_SF32LB52_SF32LB52_DEVKIT_LCD_SF32LB52_DEVKIT_LCD_H */
-
+#endif /* __VENDOR_SIFLI_SF32LB52_INCLUDE_DEBUG_H */
